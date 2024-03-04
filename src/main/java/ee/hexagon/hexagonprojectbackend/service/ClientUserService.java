@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -37,13 +38,28 @@ public class ClientUserService {
         Optional<ClientUser> existingUser = clientUserRepository.findClientUserByEmailIgnoreCase(email);
         if (existingUser.isPresent()) {
             return "Can't add new user";
+        } else if (Objects.equals(firstName, "") || Objects.equals(lastName, "")
+                || Objects.equals(email, "") || Objects.equals(password, "")) {
+            return "One or multiple values are empty";
+        } else if (Objects.equals(password, password.toLowerCase())) {
+            return "Invalid password";
         }
         ClientUser newUser = new ClientUser();
-        newUser.setFirstName(firstName);
-        newUser.setLastName(lastName);
+        newUser.setFirstName(firstName.substring(0, 1).toUpperCase() + firstName.substring(1));
+        newUser.setLastName(lastName.substring(0, 1).toUpperCase() + lastName.substring(1));
         newUser.setEmail(email);
         newUser.setPassword(passwordEncoder.encode(password));
         clientUserRepository.save(newUser);
         return "New user was added";
+    }
+
+    @Transactional
+    public boolean login(String email, String password) {
+        Optional<ClientUser> existingUser = clientUserRepository.findClientUserByEmailIgnoreCase(email);
+        if (existingUser.isEmpty()) {
+            return false;
+        }
+        ClientUser clientUser = existingUser.get();
+        return passwordEncoder.matches(password, clientUser.getPassword());
     }
 }
