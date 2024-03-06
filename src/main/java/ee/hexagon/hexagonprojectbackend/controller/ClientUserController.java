@@ -29,4 +29,9 @@ public class ClientUserController {
     public boolean login(@RequestParam String email, @RequestParam String password) {
         return clientUserService.login(email, password);
     }
+
+    @GetMapping("/userName")
+    public String getUserName(@RequestParam String email) {
+        return clientUserService.getUserName(email);
+    }
 }

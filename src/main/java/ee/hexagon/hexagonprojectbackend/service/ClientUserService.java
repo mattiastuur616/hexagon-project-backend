@@ -41,7 +41,7 @@ public class ClientUserService {
         } else if (Objects.equals(firstName, "") || Objects.equals(lastName, "")
                 || Objects.equals(email, "") || Objects.equals(password, "")) {
             return "One or multiple values are empty";
-        } else if (Objects.equals(password, password.toLowerCase())) {
+        } else if (Objects.equals(password, password.toLowerCase()) || password.length() < 18) {
             return "Invalid password";
         }
         ClientUser newUser = new ClientUser();
@@ -61,5 +61,15 @@ public class ClientUserService {
         }
         ClientUser clientUser = existingUser.get();
         return passwordEncoder.matches(password, clientUser.getPassword());
+    }
+
+    @Transactional
+    public String getUserName(String email) {
+        Optional<ClientUser> existingUser = clientUserRepository.findClientUserByEmailIgnoreCase(email);
+        if (existingUser.isEmpty()) {
+            return "";
+        }
+        ClientUser clientUser = existingUser.get();
+        return clientUser.getFirstName() + " " + clientUser.getLastName();
     }
 }
