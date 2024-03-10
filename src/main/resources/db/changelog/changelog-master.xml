@@ -23,4 +23,15 @@
             drop column id_code
         </sql>
     </changeSet>
+    <changeSet id="10.03.2024-14:45" author="mattuu">
+        <sql>
+            create table purchase(
+                purchase_id serial,
+                user_id int,
+                chapter int,
+                constraint pk_purchase_id primary key (purchase_id),
+                constraint fk_user_id_user_id foreign key (user_id) references clientUser(user_id)
+            )
+        </sql>
+    </changeSet>
 </databaseChangeLog>
