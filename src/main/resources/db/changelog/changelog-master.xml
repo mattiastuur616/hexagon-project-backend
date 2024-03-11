@@ -34,4 +34,10 @@
             )
         </sql>
     </changeSet>
+    <changeSet id="11.03.2024-09:08" author="mattuu">
+        <sql>
+            alter table purchase
+            add column pageNumber int
+        </sql>
+    </changeSet>
 </databaseChangeLog>

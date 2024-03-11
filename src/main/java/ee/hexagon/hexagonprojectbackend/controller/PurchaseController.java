@@ -20,4 +20,14 @@ public class PurchaseController {
     public boolean isPurchased(@RequestParam String email, @RequestParam Long chapter) {
         return purchaseService.isPurchased(email, chapter);
     }
+
+    @GetMapping("/pageNumber")
+    public Long getPageNumber(@RequestParam String email, @RequestParam Long chapter) {
+        return purchaseService.getPageNumber(email, chapter);
+    }
+
+    @PutMapping("/bookMark")
+    public String saveBookMark(@RequestParam String email, @RequestParam Long chapter, @RequestParam Long bookMark) {
+        return purchaseService.saveBookMark(email, chapter, bookMark);
+    }
 }

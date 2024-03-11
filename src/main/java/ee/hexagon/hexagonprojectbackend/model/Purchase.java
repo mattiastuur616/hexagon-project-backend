@@ -19,4 +19,7 @@ public class Purchase {
 
     @Column(name = "chapter")
     private Long chapter;
+
+    @Column(name = "pagenumber")
+    private Long pageNumber;
 }

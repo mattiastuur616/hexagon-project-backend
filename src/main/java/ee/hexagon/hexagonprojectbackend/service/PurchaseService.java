@@ -27,6 +27,7 @@ public class PurchaseService {
         Purchase purchase = new Purchase();
         purchase.setClientUser(existingClient.get());
         purchase.setChapter(chapter);
+        purchase.setPageNumber(0L);
         purchaseRepository.save(purchase);
         return "Book was added to user library";
     }
@@ -39,5 +40,31 @@ public class PurchaseService {
         }
         Optional<Purchase> existingPurchase = purchaseRepository.findByClientUserAndChapter(existingClient.get(), chapter);
         return existingPurchase.isPresent();
+    }
+
+    @Transactional
+    public Long getPageNumber(String email, Long chapter) {
+        Optional<ClientUser> existingClient = clientUserRepository.findClientUserByEmailIgnoreCase(email);
+        if (existingClient.isEmpty()) {
+            return null;
+        }
+        Optional<Purchase> existingPurchase = purchaseRepository.findByClientUserAndChapter(existingClient.get(), chapter);
+        return existingPurchase.map(Purchase::getPageNumber).orElse(null);
+    }
+
+    @Transactional
+    public String saveBookMark(String email, Long chapter, Long bookMark) {
+        Optional<ClientUser> existingClient = clientUserRepository.findClientUserByEmailIgnoreCase(email);
+        if (existingClient.isEmpty()) {
+            return "No bookmark was saved";
+        }
+        Optional<Purchase> existingPurchase = purchaseRepository.findByClientUserAndChapter(existingClient.get(), chapter);
+        if (existingPurchase.isEmpty()) {
+            return "No bookmark was saved";
+        }
+        Purchase purchase = existingPurchase.get();
+        purchase.setPageNumber(bookMark);
+        purchaseRepository.save(purchase);
+        return "Bookmark was saved";
     }
 }
