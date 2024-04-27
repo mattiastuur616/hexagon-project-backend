@@ -18,14 +18,9 @@ public class BookPageService {
 
     @Transactional
     public List<String> getContentFromFile(String chapter, String pageNumber) throws IOException {
-        String finalString = "";
         Path path = Paths.get("C:\\Users\\Mattias Tüür\\IdeaProjects\\hexagon-project-backend\\src\\main\\java\\ee\\hexagon\\hexagonprojectbackend\\chapters\\" + chapter + "\\" + pageNumber + ".txt");
         try (Stream<String> stream = Files.lines(path)) {
-            List<String> lines = stream.collect(Collectors.toList());
-            //for (String line : lines) {
-            //    finalString = finalString + line + "\n";
-            //}
-            return lines;
+            return stream.collect(Collectors.toList());
         } catch (IOException e) {
             throw new IOException();
         }
