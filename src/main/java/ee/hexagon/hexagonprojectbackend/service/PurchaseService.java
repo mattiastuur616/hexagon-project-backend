@@ -10,7 +10,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -66,5 +70,20 @@ public class PurchaseService {
         purchase.setPageNumber(bookMark);
         purchaseRepository.save(purchase);
         return "Bookmark was saved";
+    }
+
+    @Transactional
+    public List<String> getAllBooksBoughtByTheUser(String email) throws Exception {
+        List<String> chapterNumbers = new ArrayList<>();
+        Optional<ClientUser> existingUser = clientUserRepository.findClientUserByEmailIgnoreCase(email);
+        if (existingUser.isEmpty()) {
+            throw new Exception("No user was found");
+        }
+        ClientUser realUser = existingUser.get();
+        List<Purchase> booksInOrder = purchaseRepository.findByClientUser(realUser).stream().sorted(Comparator.comparing(Purchase::getChapter)).toList();
+        for (Purchase purchase : booksInOrder) {
+            chapterNumbers.add(String.valueOf(purchase.getChapter()));
+        }
+        return chapterNumbers;
     }
 }

@@ -4,6 +4,8 @@ import ee.hexagon.hexagonprojectbackend.service.PurchaseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin(origins = "*")
 @RequestMapping(value = "/api")
 @RequiredArgsConstructor
@@ -29,5 +31,10 @@ public class PurchaseController {
     @PutMapping("/bookMark")
     public String saveBookMark(@RequestParam String email, @RequestParam Long chapter, @RequestParam Long bookMark) {
         return purchaseService.saveBookMark(email, chapter, bookMark);
+    }
+
+    @GetMapping("/booksOfUser")
+    public List<String> getAllBooksBoughtByUser(@RequestParam String email) throws Exception {
+        return purchaseService.getAllBooksBoughtByTheUser(email);
     }
 }
